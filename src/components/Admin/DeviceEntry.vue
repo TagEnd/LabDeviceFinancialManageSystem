@@ -8,7 +8,7 @@
             <ul >
                 <li  v-for="(Type,index) in AllDeviceType" class="SiginalDeviceType" >
                     <div class="DeviceTypeDivStyle" >
-                        <span class="DeviceTypeNameStyle" :data-index="index" > {{Type}}</span>
+                        <span class="DeviceTypeNameStyle" :data-index="index" > {{Type.typeName}}</span>
                         <button class="EditDeviceTypeButtonStyle el-icon-edit-outline" ></button>
                         <button class="DeleteDeviceTypeButtonStyle el-icon-close" ></button>
                     </div>
