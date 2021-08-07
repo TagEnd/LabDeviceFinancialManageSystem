@@ -33,11 +33,11 @@
                 <span>{{NowItemName}}</span>
 
                 <button type="button" class="LogOutStyle">Log out</button>
-                <el-menu mode="horizontal" style="float: right;" >
+                <!-- <el-menu mode="horizontal" style="float: right;" >
                     <el-submenu index="1" >
                         <template slot="title">用户名</template>
                     </el-submenu>
-                </el-menu>
+                </el-menu> -->
                 <ul class="HeaderDropDown" >
                     <li class="HeaderUserTitle" >
                         <div style="height: 30px;">
@@ -144,7 +144,8 @@
         height: 80px;
         line-height: 80px;
         padding: 0 20px;
-        min-width: 500px;
+        /* min-width: 500px; */
+        min-width: none;
         width: 100%;
         box-sizing: border-box;
         background-color: #efefef;
@@ -257,7 +258,8 @@
     .Main-Body {
         box-sizing: border-box;
         height: calc(100% - 80px);
-        min-width: 500px;
+        /* min-width: 500px; */
+        min-width: none;
         /* background-color: #F6F6F7; */
         padding: 20px;
         /* overflow: auto; */

@@ -2,7 +2,8 @@ import Vue from 'vue'
 import 'element-ui/lib/theme-chalk/index.css'
 
 import {
-    Container, Header,Aside, Main, Menu, Submenu, MenuItemGroup, MenuItem,Message,Checkbox,CheckboxGroup,Pagination
+    Container, Header,Aside, Main, Menu, Submenu, MenuItemGroup, MenuItem,Message,Checkbox,CheckboxGroup,Pagination,
+    Dialog, Button
 } from 'element-ui'
 
 Vue.use(Container);
@@ -16,4 +17,6 @@ Vue.use(MenuItem);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(Pagination);
+Vue.use(Dialog);
+Vue.use(Button);
 Vue.prototype.$message = Message;
