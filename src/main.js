@@ -7,6 +7,9 @@ import './assets/css/style.css'
 
 import './plugins/element.js'
 
+import Qs from 'qs'
+Vue.prototype.qs = Qs
+
 import axios from 'axios'
 // 设置默认请求头
 axios.defaults.headers["Content-type"] = 'application/json;'

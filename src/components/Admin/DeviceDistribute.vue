@@ -183,7 +183,7 @@ export default {
             this.GetAllDeviceInformation(val);
         },
         async GetAllDeviceInformation(RequirePage) {
-            const {data: result} = await this.$http.get('/api/equipment/getAllEquipment/'+RequirePage+'/'+this.PageSize, {
+            const {data: result} = await this.$http.get('/api/equipment/getAllEquipment/'+RequirePage+'/'+this.PageSize+'/'+'purchase_date', {
                 params: {
                     brand: this.SerachObj.DeviceBrand,
                     equipmentType: this.SerachObj.DeviceName,

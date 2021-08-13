@@ -3,7 +3,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import {
     Container, Header,Aside, Main, Menu, Submenu, MenuItemGroup, MenuItem,Message,Checkbox,CheckboxGroup,Pagination,
-    Dialog, Button
+    Dialog, Button,MessageBox
 } from 'element-ui'
 
 Vue.use(Container);
@@ -20,3 +20,4 @@ Vue.use(Pagination);
 Vue.use(Dialog);
 Vue.use(Button);
 Vue.prototype.$message = Message;
+Vue.prototype.$confirm = MessageBox.confirm;
