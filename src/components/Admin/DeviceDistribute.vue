@@ -57,9 +57,11 @@
                         <td>{{Device.userId}}</td>
                         <td style="font-size: 0px; text-align: center;" >
                             <button type="button" class="TableButtonStyle DetailButtonStyle" @click="DetailButtonClick(Device)" >详情</button>
-                            <!-- <button type="button" class="TableButtonStyle EnterHouseButtonStyle" >入库</button> -->
-                            <button type="button" class="TableButtonStyle DistributeButtonStyle" >分配</button>
-                            <button type="button" class="TableButtonStyle CancelDistributeButtonStyle" >取消</button>
+                            <button type="button" class="TableButtonStyle DistributeButtonStyle" @click="DistributionButtonClick(Device)" >分配</button>
+                            <button type="button" class="TableButtonStyle CancelDistributeButtonStyle" @click="CancelDistributionButtonClick(Device)" >取消</button>
+                            <button type="button" class="TableButtonStyle DetailButtonStyle" @click="ChangeDeviceInformationButtonClick(Device)" >修改</button>
+                            <button type="button" class="TableButtonStyle DistributeButtonStyle" @click="ScrapDeviceButtonClick(Device)" >报废</button>
+                            <button type="button" class="TableButtonStyle CancelDistributeButtonStyle" @click="DeleteDeviceButton(Device)" >删除</button>
                         </td>
                     </tr>
                 </tbody>
@@ -99,6 +101,126 @@
 
         </div>
         </el-dialog>
+        <el-dialog
+        title="修改设备信息"
+        :visible.sync="ChangeDeviceDialogVisible"
+        width="400px">
+        <div id="AddDeviceInputDiv" >
+            <el-tooltip class="item" effect="dark" content="品牌" placement="top">
+              <input ref="ChangeDeviceBrandInput" type="text" class="DeviceTypeInputStyle" id="AddDeviceBrandInput" data-name="品牌" v-model="ChangeDeviceBrand" placeholder="品牌" @blur="CheckAddDeviceInputInformation" >
+            </el-tooltip>
+            <div class="InputDeviceTypeTip" id="ChangeDeviceBrandTip" ></div>
+            <el-tooltip class="item" effect="dark" content="型号" placement="top">
+                <input ref="ChangeDeviceModelInput" type="text" class="DeviceTypeInputStyle" id="AddDeviceModelInput" data-name="型号" v-model="ChangeDeviceModel" placeholder="型号" @blur="CheckAddDeviceInputInformation" >
+            </el-tooltip>
+            <div class="InputDeviceTypeTip" id="ChangeDeviceModelTip" ></div>
+            <el-tooltip class="item" effect="dark" content="规格" placement="top">
+                <input ref="ChangeDeviceSpecificationInput" type="text" class="DeviceTypeInputStyle" id="AddDeviceSpecificationInput" data-name="规格" v-model="ChangeDeviceSpecification" placeholder="规格" @blur="CheckAddDeviceInputInformation" >
+            </el-tooltip>
+            <div class="InputDeviceTypeTip" id="ChangeDeviceSpecificationTip" ></div>
+            <el-tooltip class="item" effect="dark" content="单价" placement="top">
+                <input ref="ChangeDeviceUnitPriceInput" type="text" class="DeviceTypeInputStyle" id="AddDeviceUnitPriceInput" data-name="单价" v-model="ChangeDeviceUnitPrice" placeholder="单价" @blur="CheckAddDeviceInputInformation" >
+            </el-tooltip>
+            <div class="InputDeviceTypeTip" id="ChangeDeviceUnitPriceTip" ></div>
+            <el-tooltip class="item" effect="dark" content="设备类型" placement="top">
+                <el-select ref="AddDeviceTypeSelect" v-model="ChangeDeviceType" id="AddDeviceTypeSelect" class="ChangeDeviceSelectStyle" placeholder="设备类型" data-name="设备类型" >
+                    <el-option
+                    v-for="item in AllDeviceType"
+                    :key="item.typeId"
+                    :label="item.typeName"
+                    :value="item.typeName">
+                    </el-option>
+                </el-select>
+            </el-tooltip>
+            <div class="InputDeviceTypeTip" id="AddDeviceTypeTip" ></div>
+            <el-tooltip class="item" effect="dark" content="存放地点" placement="top">
+                <el-select ref="AddDevicePlaceSelect" v-model="ChangeDevicePlace" id="AddDevicePlaceSelect" class="ChangeDeviceSelectStyle" placeholder="存放地点" data-name="存放地点">
+                    <el-option
+                    v-for="item in SchoolAllPlace"
+                    :key="item.placeId"
+                    :label="item.placeName"
+                    :value="item.placeName">
+                    </el-option>
+                </el-select>
+            </el-tooltip>
+            <div class="InputDeviceTypeTip" id="AddDevicePlaceTip" ></div>
+            <el-tooltip class="item" effect="dark" content="购买人账户" placement="top">
+                <el-select ref="AddDeviceUserSelect" v-model="ChangeDevicePurchaser" id="AddDeviceUserSelect" class="ChangeDeviceSelectStyle" placeholder="购买人账户" data-name="购买人账户" >
+                    <el-option
+                    v-for="item in SelectAllUser"
+                    :key="item.userId"
+                    :label="item.userName+' ('+ item.userId +')'"
+                    :value="item.userName">
+                    </el-option>
+                </el-select>
+            </el-tooltip>
+            <div class="InputDeviceTypeTip" id="AddDeviceUserTip" ></div>
+            <el-tooltip class="item" effect="dark" content="购买日期" placement="top">
+                <div>
+                    <el-date-picker
+                    class="ChangeDeviceSelectStyle"
+                    id="AddPurchaseDateSelect"
+                    v-model="ChangePurchaseDate"
+                    type="date"
+                    :picker-options="StartTimeLimit"
+                    placeholder="购买日期"
+                    ref="AddPurchaseDateSelect"
+                    data-name="购买日期">
+                    </el-date-picker>
+                    <div class="InputDeviceTypeTip" id="AddPurchaseDateTip" ></div>
+                </div>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="报废日期" placement="top">
+                <div>
+                    <el-date-picker
+                    class="ChangeDeviceSelectStyle"
+                    id="AddRetirementDateSelect"
+                    v-model="ChangeRetirementDate"
+                    type="date"
+                    :picker-options="EndTimeLimit"
+                    placeholder="报废日期"
+                    ref="AddRetirementDateSelect"
+                    data-name="报废日期">
+                    </el-date-picker>
+                    <div class="InputDeviceTypeTip" id="AddRetirementDateTip" ></div>
+                </div>
+            </el-tooltip>
+            <div style="height: 20px; " >
+                <span style="height: 30px; display: inline-block;" >是否入账： </span>
+                <el-radio v-model="ChangeIsRecorded" :label=true>是</el-radio>
+                <el-radio v-model="ChangeIsRecorded" :label=false>否</el-radio>
+            </div>
+            <div style="height: 20px; margin-top: 10px; " >
+                <span style="height: 30px; display: inline-block;" >是否报废： </span>
+                <el-radio v-model="ChangeIsRetired" :label=true>是</el-radio>
+                <el-radio v-model="ChangeIsRetired" :label=false>否</el-radio>
+            </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="ChangeDeviceDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="DetermineChangeDeviceInformation">确 定</el-button>
+        </span>
+        </el-dialog>
+        <el-dialog
+        title="设备分配"
+        :visible.sync="DistributionDialogVisible"
+        width="400px">
+            <div id="AddDeviceInputDiv" >
+                <el-select ref="DistributionDeviceUserSelect" v-model="DistributionDeviceUser" id="DistributionDeviceUserSelect" class="ChangeDeviceSelectStyle" placeholder="使用者账户" data-name="使用者账户" @change="CheckDistributionDeviceSelect($refs.DistributionDeviceUserSelect.$el)" >
+                    <el-option
+                    v-for="item in SelectAllUser"
+                    :key="item.userId"
+                    :label="item.userName+' ('+ item.userId +')'"
+                    :value="item.userId">
+                    </el-option>
+                </el-select>
+                <div class="InputDeviceTypeTip" id="AddDeviceUserTip" ></div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="DistributionDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="DetermineDistributionClick">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -132,6 +254,33 @@ export default {
             },
             DetailDialogVisible: false,
             DetailDeviceInformation: {},
+
+            ChangeDeviceDialogVisible: false,
+            // 设备修改参数
+            ChangePurchaseDate: '', // 购买日期
+            ChangeRetirementDate: '', // 报废日期
+            StartTimeLimit: this.LimitStartTime(),
+            EndTimeLimit: this.LimitEndTime(),
+            ChangeIsRecorded: '', // 是否报账
+            ChangeIsRetired: '',
+            ChangeDevicePlace: '', // 设备存放地点
+            ChangeDevicePurchaser: '', //设备购买者
+            ChangeDeviceType: '', //设备类型
+            ChangeDeviceBrand: '', // 设备品牌
+            ChangeDeviceModel: '', // 设备型号
+            ChangeDeviceSpecification: '', // 设备规格
+            ChangeDeviceUnitPrice: '', // 设备单价
+            ChangeDeviceUserId: '', // 使用者id
+            ChangeDeviceId: '', // 使用者id
+            ChangeIsAssigned: '', //是否分配
+
+            AllDeviceType: [],
+            SchoolAllPlace: [],
+            SelectAllUser: [],
+
+            DistributionDialogVisible: false,
+            DistributionDeviceUser: '',
+            DistributionDeviceId: '',
         };
     },
     computed: {
@@ -171,12 +320,161 @@ export default {
     },
     async created() {
         this.GetAllDeviceInformation(1);
+        this.GetAllDeviceType();
+        this.GetSelectAllPlace();
+        this.GetSelectAllUser();
     },
     methods: {
+        async GetAllDeviceType() {
+            const {data: result} = await this.$http('/api/type/selectAllType');
+            if(result.code == 200 && result.success) {
+                console.log(result);
+                this.AllDeviceType = result.data.list;
+                this.AllDeviceTypeName=[];
+                for(let i=0;i<this.AllDeviceType.length;i++){
+                    this.AllDeviceTypeName.push(this.AllDeviceType[i].typeName)
+                }
+            }
+        },
+        async GetSelectAllPlace() {
+            const {data: result} = await this.$http('/api/place/selectAllPlace');
+            if(result.code == 200 && result.success) {
+                console.log(result);
+                this.SchoolAllPlace = result.data.list;
+                console.log(this.SchoolAllPlace );
+            }
+        },
+        async GetSelectAllUser() {
+            const {data: result} = await this.$http('/api/user/selectAllUser');
+            if(result.code == 200 && result.success) {
+                console.log(result);
+                this.SelectAllUser = result.data.list;
+                console.log(this.SelectAllUser );
+            }
+        },
+        LimitEndTime() {
+            let self = this;
+            return {
+                disabledDate(time){
+                    return time.getTime() < self.ChangePurchaseDate;
+                }
+            }
+        },
+        LimitStartTime() {
+            let self = this;
+            return {
+                disabledDate(time) {
+                    if(self.ChangeRetirementDate!=''){
+                        return time.getTime() > self.ChangeRetirementDate;
+                    }
+                },
+            }
+        },
         DetailButtonClick(obj) {
             this.DetailDialogVisible = true;
             console.log(obj);
             this.DetailDeviceInformation = obj;
+        },
+        InitChangeDeviceElement() {
+            if(this.$refs.ChangeDeviceBrandInput) {
+                this.$refs.ChangeDeviceBrandInput.style = '';
+                this.getNextElementSibling(this.$refs.ChangeDeviceBrandInput).innerText = ''
+                this.$refs.ChangeDeviceModelInput.style = '';
+                this.getNextElementSibling(this.$refs.ChangeDeviceModelInput).innerText = ''
+                this.$refs.ChangeDeviceSpecificationInput.style = '';
+                this.getNextElementSibling(this.$refs.ChangeDeviceSpecificationInput).innerText = ''
+                this.$refs.ChangeDeviceUnitPriceInput.style = '';
+                this.getNextElementSibling(this.$refs.ChangeDeviceUnitPriceInput).innerText = ''
+            }
+
+        },
+        ChangeDeviceInformationButtonClick(obj) {
+            this.InitChangeDeviceElement();
+            this.ChangeDeviceDialogVisible = true;
+            console.log(obj);
+            this.ChangePurchaseDate = obj.purchaseDate;
+            this.ChangeRetirementDate = obj.retirementDate;
+            this.ChangeIsRecorded = obj.isRecorded;
+            this.ChangeIsRetired = obj.isRetired;
+            this.ChangeDevicePlace = obj.place;
+            this.ChangeDevicePurchaser = obj.purchaserId;
+            this.ChangeDeviceType = obj.equipmentType;
+            this.ChangeDeviceBrand = obj.brand;
+            this.ChangeDeviceSpecification = obj.specification;
+            this.ChangeDeviceModel = obj.model;
+            this.ChangeDeviceUnitPrice = obj.unitPrice;
+            this.ChangeDeviceUserId = obj.userId;
+            this.ChangeDeviceId = obj.equipmentId;
+            this.ChangeIsAssigned = obj.isAssigned;
+        },
+        CheckAddDeviceInputInformation(e) {
+            var BortherElement = this.getNextElementSibling(e.currentTarget);
+            console.log(BortherElement);
+            if(e.currentTarget.value == '') {
+                BortherElement.innerText =e.currentTarget.getAttribute('data-name') + '不能为空';
+                e.currentTarget.style = 'border: 1px solid #f56c6c'
+                return false;
+            }
+            else {
+                BortherElement.innerText = '';
+                e.currentTarget.style = '';
+                return true;
+            }
+        },
+        CheckChangeDeviceInformation() {
+            var flag = true;
+            if(this.ChangeDeviceBrand == '') {
+                this.$refs.ChangeDeviceBrandInput.style = 'border: 1px solid #f56c6c;'
+                document.querySelector('#ChangeDeviceBrandTip').innerHTML =  '品牌不能为空'
+                flag = false;
+            }
+            if(this.ChangeDeviceModel == '') {
+                this.$refs.ChangeDeviceModelInput.style = 'border: 1px solid #f56c6c;'
+                document.querySelector('#ChangeDeviceModelTip').innerHTML =  '型号不能为空'
+                flag = false;
+            }
+            if(this.ChangeDeviceSpecification == '') {
+                this.$refs.ChangeDeviceSpecificationInput.style = 'border: 1px solid #f56c6c;'
+                document.querySelector('#ChangeDeviceSpecificationTip').innerHTML =  '规格不能为空'
+                flag = false;
+            }
+            if(this.ChangeDeviceUnitPrice == '') {
+                this.$refs.ChangeDeviceUnitPriceInput.style = 'border: 1px solid #f56c6c;'
+                document.querySelector('#ChangeDeviceUnitPriceTip').innerHTML =  '单价不能为空'
+                flag = false;
+            }
+            return flag
+        },
+        async DetermineChangeDeviceInformation() {
+            if(this.CheckChangeDeviceInformation()){
+                const {data: result} = await this.$http.post('/api/equipment/alterEquipment/'+this.ChangeDeviceId,{
+                    place: this.ChangeDevicePlace,
+                    brand: this.ChangeDeviceBrand,
+                    isAssigned: this.ChangeIsAssigned,
+                    isRecorded: this.ChangeIsRecorded,
+                    isRetired: this.ChangeIsRetired,
+                    model: this.ChangeDeviceModel,
+                    equipmentType: this.ChangeDeviceType,
+                    purchaseDate: this.ChangePurchaseDate,
+                    purchaserId: this.ChangeDevicePurchaser,
+                    retirementDate: this.ChangeRetirementDate,
+                    specification: this.ChangeDeviceSpecification,
+                    unitPrice: this.ChangeDeviceUnitPrice,
+                    userId: this.ChangeDeviceUserId,
+                })
+                console.log(result);
+                if(result.code == 200 && result.success){
+                    this.$message({
+                        message: result.message,
+                        type: 'success',
+                        duration: 1000,
+                    })
+                    this.GetAllDeviceInformation(this.CurrentPage);
+                    this.ChangeDeviceDialogVisible = false;
+                }
+                // this.ChangeDeviceDialogVisible = false;
+            }
+            // this.ChangeDeviceDialogVisible = false;
         },
         CurrentPageChange(val){
             // console.log(val);
@@ -200,7 +498,7 @@ export default {
             }
             else {
                 this.$message({
-                    message: result.messgae,
+                    message: result.message,
                     type: 'error',
                     duration: 1000,
                 });
@@ -239,7 +537,132 @@ export default {
             this.FilterObj.IsReimbursement = IsReimbursement;
             this.FilterObj.IsScrapped = IsScrapped;
             this.GetAllDeviceInformation(1);
-        }
+        },
+        // 获取兄弟节点的兼容性函数
+        getNextElementSibling(element) {
+            var el = element;
+            while (el = el.nextSibling) {
+                if (el.nodeType === 1) {
+                    return el;
+                }
+            }
+            return null;
+        },
+        DistributionButtonClick(obj) {
+            this.DistributionDeviceId = obj.equipmentId;
+            this.DistributionDialogVisible = true;
+        },
+        CheckDistributionUserId() {
+            console.log(this.$refs.DistributionDeviceUserSelect.$el);
+            if(this.DistributionDeviceUser == '') {
+                this.$refs.DistributionDeviceUserSelect.$el.querySelector('.el-input__inner').style = 'border: 1px solid #f56c6c'
+                this.getNextElementSibling(this.$refs.DistributionDeviceUserSelect.$el).innerText = '使用者不能为空'
+                return false
+            }
+            return true
+        },
+        async DetermineDistributionClick() {
+            if(this.CheckDistributionUserId()) {
+                const {data: result} = await this.$http.post('/api/equipment/assignEquipment/'+this.DistributionDeviceId+'/'+this.DistributionDeviceUser)
+                console.log(result);
+                if(result.code == 200 && result.success) {
+                    this.$message({
+                        message: result.message,
+                        type: 'success',
+                        duration: 1000,
+                    })
+                    this.GetAllDeviceInformation(this.CurrentPage);
+                    this.DistributionDialogVisible = false;
+                }
+            }
+
+            // this.DistributionDialogVisible = false;
+        },
+        CheckDistributionDeviceSelect(e) {
+            console.log(e);
+            e.querySelector('.el-input__inner').style = '';
+            var bother = this.getNextElementSibling(e);
+            bother.innerText = ''
+        },
+        CancelDistributionButtonClick(obj) {
+            console.log(obj);
+            this.$confirm('是否取消该设备分配',  {
+                confirmButtonText: '是',
+                cancelButtonText: '否',
+                type: 'warning'
+            }).then(async ()=>{
+                const {data :result} = await this.$http.post('/api/equipment/unassignEquipmentByForce/'+ obj.equipmentId);
+                console.log(result);
+                if(result.code ==200 && result.success) {
+                    this.GetAllDeviceInformation(1);
+                    this.$message({
+                        message: result.message,
+                        type: "success",
+                        duration: 1000,
+                    })
+                }
+                else {
+                    this.$message({
+                        message: result.message,
+                        type: "error",
+                        duration: 1000,
+                    })
+                }
+            })
+        },
+        ScrapDeviceButtonClick(obj) {
+            console.log(obj);
+            this.$confirm('是否报废该设备',  {
+                confirmButtonText: '是',
+                cancelButtonText: '否',
+                type: 'warning'
+            }).then(async ()=>{
+                const {data :result} = await this.$http.post('/api/equipment/retireEquipment/'+ obj.equipmentId);
+                console.log(result);
+                if(result.code ==200 && result.success) {
+                    this.GetAllDeviceInformation(1);
+                    this.$message({
+                        message: result.message,
+                        type: "success",
+                        duration: 1000,
+                    })
+                }
+                else {
+                    this.$message({
+                        message: result.message,
+                        type: "error",
+                        duration: 1000,
+                    })
+                }
+            })
+        },
+        DeleteDeviceButton(obj){
+            console.log(obj);
+            this.$confirm('是否删除该设备',  {
+                confirmButtonText: '是',
+                cancelButtonText: '否',
+                type: 'warning'
+            }).then(async ()=>{
+                const {data :result} = await this.$http.delete('/api/equipment/deleteEquipment/'+ obj.equipmentId);
+                console.log(result);
+                if(result.code ==200 && result.success) {
+                    this.GetAllDeviceInformation(1);
+                    this.CurrentPage = 1;
+                    this.$message({
+                        message: result.message,
+                        type: "success",
+                        duration: 1000,
+                    })
+                }
+                else {
+                    this.$message({
+                        message: result.message,
+                        type: "error",
+                        duration: 1000,
+                    })
+                }
+            })
+        },
     }
 }
 </script>
@@ -432,5 +855,98 @@ export default {
     }
     >>> .el-dialog__body {
         padding: 5px 20px;
+    }
+    .DeviceTypeInputStyle {
+        box-sizing: border-box;
+        height: 30px;
+        width: 80%;
+        border: 1px solid #ebeef5;
+        border-radius: 5px;
+        font-size: 14px;
+        line-height: 30px;
+        padding: 0 20px;
+        color: #000;
+        outline: none;
+    }
+    .DeviceTypeInputStyle:focus {
+        border: 1px solid #76acfe;
+    }
+    .DeviceTypeInputStyle::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: #7D7D7D;
+        font-size: 14px;
+    }
+
+    .DeviceTypeInputStyle::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #7D7D7D;
+        font-size: 14px;
+    }
+
+    .DeviceTypeInputStyle:-ms-input-placeholder {
+        /* IE 10+ */
+        color: #7D7D7D;
+        font-size: 14px;
+    }
+
+    .DeviceTypeInputStyle:-moz-placeholder {
+        /* Firefox 18- */
+        color: #7D7D7D;
+        font-size: 14px;
+    }
+    .InputDeviceTypeTip {
+        height: 10px;
+        width: 100%;
+        line-height: 10px;
+        font-size: 10px;
+        color: #f56c6c;
+        padding-left: 20px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+    .ChangeDeviceSelectStyle {
+        width: 80%;
+    }
+    >>>.ChangeDeviceSelectStyle .el-select {
+        height: 30px;
+        width: 100%; 
+    }
+    >>>.ChangeDeviceSelectStyle .el-input {
+        height: 30px;
+        color: black;
+    }
+    >>>.ChangeDeviceSelectStyle .el-input__inner {
+        height: 30px;
+        color: black;
+        border: 1px solid #ebeef5;
+    }
+    >>>.ChangeDeviceSelectStyle .el-input__inner:focus {
+        border: 1px solid #76acfe;
+    }
+    >>>.ChangeDeviceSelectStyle .el-input__inner::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: #7D7D7D;
+        font-size: 14px;
+    }
+    >>>.ChangeDeviceSelectStyle .el-input__inner::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #7D7D7D;
+        font-size: 14px;
+    }
+    >>>.ChangeDeviceSelectStyle .el-input__inner:-ms-input-placeholder {
+        /* IE 10+ */
+        color: #7D7D7D;
+        font-size: 14px;
+    } 
+    >>>.ChangeDeviceSelectStyle .el-input__inner:-moz-placeholder {
+        /* Firefox 18- */
+        color: #7D7D7D;
+        font-size: 14px;
+    }
+    >>>.ChangeDeviceSelectStyle .el-input__icon {
+        line-height: 30px;
+    }
+    >>>.ChangeDeviceSelectStyle .el-date-editor {
+        width: 80%;
     }
 </style>

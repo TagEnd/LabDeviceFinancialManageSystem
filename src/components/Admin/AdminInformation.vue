@@ -17,13 +17,12 @@
                         <template slot="title" >设备信息</template>
                         <el-menu-item index="/DeviceEntry" @click="SaveSideActive('/DeviceEntry', '设备录入')" >设备录入</el-menu-item>
                         <el-menu-item index="/DeviceDistribute" @click="SaveSideActive('/DeviceDistribute', '设备分配')" >设备分配</el-menu-item>
-                        <el-menu-item index="/DeviceType" @click="SaveSideActive('/DeviceType', '类型管理')" >类型管理</el-menu-item>
+                        <!-- <el-menu-item index="/DeviceType" @click="SaveSideActive('/DeviceType', '类型管理')" >类型管理</el-menu-item> -->
                     </el-submenu>
                     <el-submenu index="2">
                         <template slot="title" >用户信息</template>
                         <el-menu-item index="2-1" >用户管理</el-menu-item>
                         <el-menu-item index="2-1" >导师管理</el-menu-item>
-                        <el-menu-item index="2-1" >位置管理</el-menu-item>
                     </el-submenu>
                 </el-menu>
             </div>
